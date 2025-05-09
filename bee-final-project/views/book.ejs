@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> | Hospital Website</title> 
+    <!-- Page Icon -->
+    <link rel="shortcut icon" href="image/heartbeat-solid.svg" type="image/x-icon">   
+    <!-- font-awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+    <!-- Custom Css File Link -->
+    <link rel="stylesheet" href="./css/style.css">
+    <style>
+        .appointment-info {
+            background-color: #f8f9fa;
+            border-left: 4px solid #16a085;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .doctor-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 20px;
+            border: 3px solid #16a085;
+        }
+        
+        .doctor-details {
+            flex: 1;
+        }
+        
+        .appointment-info h4 {
+            color: #16a085;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .appointment-info p {
+            margin: 5px 0;
+            color: #555;
+        }
+        
+        .appointment-info .highlight {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .book .row {
+            position: relative;
+        }
+        
+        .slot-display {
+            background-color: #eafaf1;
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+            display: inline-block;
+            color: #16a085;
+            font-weight: bold;
+        }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            width: 450px;
+            position: relative;
+            animation: modalFadeIn 0.5s;
+        }
+        
+        @keyframes modalFadeIn {
+            from {opacity: 0; transform: translateY(-30px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+        
+        .modal-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-icon {
+            font-size: 60px;
+            color: #16a085;
+            margin-bottom: 15px;
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .modal-subtitle {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .modal-body {
+            margin-bottom: 20px;
+        }
+        
+        .modal-actions {
+            text-align: center;
+        }
+        
+        .modal-btn {
+            background: #16a085;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+        
+        .modal-btn:hover {
+            background: #117a65;
+        }
+        
+        .modal-doctor-image {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 15px;
+            display: block;
+            border: 3px solid #16a085;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section Starts -->
+    <%- include('partials/header') %>
+   
+ <section class="book" id="book">
+    <h1 class="heading"><span>book</span> now</h1>
+    
+    <!-- Login Status Indicator -->
+    <div class="login-status-container" style="text-align: center; margin-bottom: 30px;">
+        <% if (typeof isLoggedIn !== 'undefined' && isLoggedIn) { %>
+            <div class="login-status success" style="display: inline-block; background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; border-radius: 5px; padding: 10px 20px; margin-bottom: 20px;">
+                <i class="fas fa-check-circle" style="margin-right: 10px;"></i>
+                You are logged in as <strong><%= username %></strong>. You can proceed with booking your appointment.
+            </div>
+        <% } else { %>
+            <div class="login-status warning" style="display: inline-block; background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; border-radius: 5px; padding: 10px 20px; margin-bottom: 20px;">
+                <i class="fas fa-exclamation-triangle" style="margin-right: 10px;"></i>
+                You are not logged in. Please <a href="/login?redirect=book" style="color: #0056b3; text-decoration: underline;">login</a> to book an appointment.
+            </div>
+        <% } %>
+    </div>
+    
+    <div class="row">
+        <div class="image">
+            <img src="./image/book-img.svg" alt="">
+        </div>
+        
+        <div id="appointment-details" class="appointment-info" style="display:none;">
+            <img id="doctor-image-display" class="doctor-image" src="" alt="Doctor Image">
+            <div class="doctor-details">
+                <h4><i class="fas fa-user-md"></i> Your Selected Doctor</h4>
+                <p><strong id="doctor-name-display" style="font-size: 1.3rem; color: #16a085;"></strong></p>
+                <p><i class="fas fa-stethoscope"></i> Department: <span id="department-display" class="highlight"></span></p>
+                <p><i class="fas fa-clock"></i> Time Slot: <span id="slot-display" class="highlight"></span></p>
+                <p><i class="fas fa-calendar-alt"></i> Date: <span id="date-display" class="highlight">Today</span></p>
+                <p><i class="fas fa-award"></i> Experience: <span id="experience-display" class="highlight"></span> Years</p>
+            </div>
+        </div>
+        
+        <form action="/book" method="POST">
+            <h3>book appointment</h3>
+            
+            <!-- Specialty Filter -->
+            <div class="box">
+                <label for="specialtySelect"><i class="fas fa-hospital"></i> Department:</label>
+                <select id="specialtySelect" name="department" class="box" onchange="updateDepartmentField()" required>
+                    <option value="">-- Select Department --</option>
+                    <% if (typeof specialties !== 'undefined' && specialties.length > 0) { %>
+                        <% specialties.forEach(specialty => { %>
+                            <option value="<%= specialty %>"><%= specialty %></option>
+                        <% }); %>
+                    <% } %>
+                </select>
+            </div>
+            
+            <!-- Doctor Selection -->
+            <div class="box">
+                <label for="doctorSelect"><i class="fas fa-user-md"></i> Doctor:</label>
+                <select id="doctorSelect" name="doctor" class="box" onchange="selectDoctor(this.value)" required>
+                    <option value="">-- Select Doctor --</option>
+                    <% if (typeof doctors !== 'undefined' && doctors.length > 0) { %>
+                        <% doctors.forEach(doctor => { %>
+                            <option 
+                                value="<%= doctor._id %>" 
+                                data-name="<%= doctor.name %>" 
+                                data-specialty="<%= doctor.specialty %>" 
+                                data-experience="<%= doctor.experience %>"
+                                data-image="<%= doctor.image %>"
+                            >
+                                <%= doctor.name %> - <%= doctor.specialty %>
+                            </option>
+                        <% }); %>
+                    <% } %>
+                </select>
+            </div>
+            
+            <!-- Time Slot Selection -->
+            <div class="box">
+                <label for="timeSlotSelect"><i class="fas fa-clock"></i> Select Time Slot:</label>
+                <select id="timeSlotSelect" name="slot" class="box" onchange="selectTimeSlot(this.value)" required>
+                    <option value="">-- Select a Time Slot --</option>
+                    <option value="slot1">9:00 AM - 10:00 AM</option>
+                    <option value="slot2">10:00 AM - 11:00 AM</option>
+                    <option value="slot3">11:00 AM - 12:00 PM</option>
+                    <option value="slot4">1:00 PM - 2:00 PM</option>
+                    <option value="slot5">3:00 PM - 4:00 PM</option>
+                </select>
+            </div>
+            
+            <!-- Basic Patient Information -->
+            <input type="text" name="name" placeholder="your name" class="box" required>
+            <input type="number" name="phone" placeholder="your number" class="box" required>
+            <input type="email" name="email" placeholder="your email" class="box" required>
+            <input type="date" name="date" class="box" required>
+            
+            <textarea name="description" placeholder="describe your concern" class="box" rows="4" required></textarea>
+            <input type="submit" value="confirm booking" class="btn">
+        </form>
+    </div>
+</section>
+
+    <%- include('partials/footer') %>
+   
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h2 class="modal-title">Booking Successful!</h2>
+                <p class="modal-subtitle">Your appointment has been confirmed</p>
+            </div>
+            <div class="modal-body">
+                <div class="thank-you-message" style="text-align: center; margin-bottom: 20px; padding: 15px; background-color: #d4edda; border-radius: 5px; border-left: 5px solid #16a085;">
+                    <i class="fas fa-heart" style="color: #16a085; font-size: 24px; margin-right: 10px;"></i>
+                    <span style="font-size: 18px; font-weight: bold; color: #155724;">Thank you for choosing HealthScape!</span>
+                </div>
+                <div class="appointment-details">
+                    <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                        <img id="modal-doctor-image" class="modal-doctor-image" src="" alt="Doctor Image">
+                        <div>
+                            <p><strong>Doctor:</strong> <span id="modal-doctor-name"></span></p>
+                            <p><strong>Department:</strong> <span id="modal-department"></span></p>
+                        </div>
+                    </div>
+                    <p><strong>Date:</strong> <span id="modal-date"></span></p>
+                    <p><strong>Time Slot:</strong> <span id="modal-slot"></span></p>
+                    <p id="modal-experience-container" style="display:none"><strong>Experience:</strong> <span id="modal-experience"></span> Years</p>
+                </div>
+                <p style="text-align: center; font-size: 16px; color: #444; margin-top: 15px;">
+                    Your appointment details have been saved and are available in your dashboard.
+                </p>
+                <p style="text-align: center; font-size: 16px; color: #444; margin-top: 10px;">
+                    You will be redirected to your dashboard in <span id="countdown">5</span> seconds.
+                </p>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn" id="goToDashboardBtn">Go to Dashboard Now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slot Already Booked Modal -->
+    <div id="slotBookedModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-icon" style="color: #e74c3c;">
+                    <i class="fas fa-exclamation-circle"></i>
+                </div>
+                <h2 class="modal-title">Slot Already Booked</h2>
+                <p class="modal-subtitle">Please select a different time slot</p>
+            </div>
+            <div class="modal-body">
+                <p style="text-align: center; font-size: 16px; color: #444; margin-bottom: 15px;">
+                    This time slot has already been booked by another patient.
+                </p>
+                <p style="text-align: center; font-size: 16px; color: #444;">
+                    Please go back and select a different time slot or date.
+                </p>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn" id="tryAgainBtn" style="background: #e74c3c;">Try Again</button>
+            </div>
+        </div>
+    </div>
+   
+   <script>
+       document.addEventListener('DOMContentLoaded', function() {
+           // Initialize doctor selection
+           setupAppointmentForm();
+           
+           // Set today's date as minimum date in the date picker
+           const today = new Date().toISOString().split('T')[0];
+           document.querySelector('input[name="date"]').min = today;
+           
+           // Display today as default formatted date
+           const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+           const formattedToday = new Date(today).toLocaleDateString('en-US', dateOptions);
+           document.getElementById('date-display').textContent = formattedToday;
+           
+           // Handle specialty filter change
+           if (document.getElementById('specialtySelect')) {
+               document.getElementById('specialtySelect').addEventListener('change', filterDoctorsBySpecialty);
+           }
+           
+           // Form validation
+           document.querySelector('form').addEventListener('submit', function(event) {
+               // Get required fields
+               const doctorSelect = document.getElementById('doctorSelect');
+               const specialtySelect = document.getElementById('specialtySelect');
+               const timeSlotSelect = document.getElementById('timeSlotSelect');
+               
+               // Check if fields are empty
+               if (!doctorSelect.value) {
+                   event.preventDefault();
+                   alert('Please select a doctor');
+                   doctorSelect.focus();
+                   return false;
+               }
+               
+               if (!specialtySelect.value) {
+                   event.preventDefault();
+                   alert('Please select a department');
+                   specialtySelect.focus();
+                   return false;
+               }
+               
+               if (!timeSlotSelect.value) {
+                   event.preventDefault();
+                   alert('Please select a time slot');
+                   timeSlotSelect.focus();
+                   return false;
+               }
+               
+               return true;
+           });
+       });
+       
+       // Function to update department field when specialty is selected
+       function updateDepartmentField() {
+           const specialty = document.getElementById('specialtySelect').value;
+           if (specialty) {
+               document.getElementById('department-display').textContent = specialty;
+           } else {
+               document.getElementById('department-display').textContent = 'Not Selected';
+           }
+       }
+       
+       // Function to filter doctors by specialty
+       function filterDoctorsBySpecialty() {
+           const specialtySelect = document.getElementById('specialtySelect');
+           const doctorSelect = document.getElementById('doctorSelect');
+           const selectedSpecialty = specialtySelect.value;
+           
+           // Reset doctor selection
+           doctorSelect.selectedIndex = 0;
+           
+           // If no specialty is selected, show all doctors
+           if (!selectedSpecialty) {
+               Array.from(doctorSelect.options).forEach(option => {
+                   option.style.display = '';
+               });
+               return;
+           }
+           
+           // Show only doctors matching the selected specialty
+           Array.from(doctorSelect.options).forEach(option => {
+               if (option.value === '' || option.text.includes(selectedSpecialty)) {
+                   option.style.display = '';
+               } else {
+                   option.style.display = 'none';
+               }
+           });
+           
+           // Update department field
+           document.getElementById('department-display').textContent = selectedSpecialty;
+       }
+       
+       // Function to handle doctor selection
+       function selectDoctor(doctorId) {
+           if (!doctorId) {
+               // Reset doctor information if no doctor selected
+               document.getElementById('doctor-name-display').textContent = 'Not Specified';
+               document.getElementById('department-display').textContent = document.getElementById('specialtySelect').value || 'General Checkup';
+               document.getElementById('experience-display').parentElement.style.display = 'none';
+               document.getElementById('doctor-image-display').src = 'image/doc-1.jpg';
+               
+               // Show appointment details box with general appointment heading
+               document.getElementById('appointment-details').style.display = 'block';
+               document.querySelector('form h3').textContent = 'Book general appointment';
+               document.querySelector('#appointment-details h4').innerHTML = '<i class="fas fa-hospital"></i> General Appointment';
+               return;
+           }
+           
+           const doctorSelect = document.getElementById('doctorSelect');
+           const selectedOption = doctorSelect.options[doctorSelect.selectedIndex];
+           
+           if (selectedOption) {
+               const doctorName = selectedOption.getAttribute('data-name');
+               const specialty = selectedOption.getAttribute('data-specialty');
+               const experience = selectedOption.getAttribute('data-experience');
+               const image = selectedOption.getAttribute('data-image');
+               
+               // Update display
+               document.getElementById('doctor-name-display').textContent = doctorName;
+               document.getElementById('department-display').textContent = specialty;
+               document.getElementById('experience-display').textContent = experience;
+               document.getElementById('experience-display').parentElement.style.display = 'block';
+               
+               // Set doctor image
+               if (image) {
+                   document.getElementById('doctor-image-display').src = `image/${image}`;
+               } else {
+                   document.getElementById('doctor-image-display').src = 'image/doc-1.jpg'; // default image
+               }
+               
+               // Show the appointment details box
+               document.getElementById('appointment-details').style.display = 'block';
+               
+               // Update heading for specific doctor
+               document.querySelector('form h3').textContent = `Book appointment with ${doctorName}`;
+               document.querySelector('#appointment-details h4').innerHTML = '<i class="fas fa-user-md"></i> Your Selected Doctor';
+           }
+       }
+       
+       // Function to handle time slot selection
+       function selectTimeSlot(slot) {
+           if (!slot) {
+               document.getElementById('slot-display').textContent = '-- Select a Time Slot --';
+               return;
+           }
+           
+           // Convert slot to readable format
+           let timeSlotText = '';
+           switch(slot) {
+               case 'slot1': timeSlotText = "9:00 AM - 10:00 AM"; break;
+               case 'slot2': timeSlotText = "10:00 AM - 11:00 AM"; break;
+               case 'slot3': timeSlotText = "11:00 AM - 12:00 PM"; break;
+               case 'slot4': timeSlotText = "1:00 PM - 2:00 PM"; break;
+               case 'slot5': timeSlotText = "3:00 PM - 4:00 PM"; break;
+               default: timeSlotText = slot;
+           }
+           
+           document.getElementById('slot-display').textContent = timeSlotText;
+       }
+
+       function setupAppointmentForm() {
+           try {
+               // Update the date display when the date input changes
+               document.querySelector('input[name="date"]').addEventListener('change', function(e) {
+                   const selectedDate = new Date(this.value);
+                   const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                   const formattedDate = selectedDate.toLocaleDateString('en-US', dateOptions);
+                   document.getElementById('date-display').textContent = formattedDate;
+               });
+               
+               // Add form validation before submission
+               document.querySelector('form').addEventListener('submit', function(event) {
+                   // Check required fields
+                   const doctorSelect = document.getElementById('doctorSelect');
+                   const specialtySelect = document.getElementById('specialtySelect');
+                   const timeSlotSelect = document.getElementById('timeSlotSelect');
+                   
+                   // Validate doctor selection
+                   if (!doctorSelect.value.trim()) {
+                       event.preventDefault();
+                       alert('Please select a doctor');
+                       doctorSelect.focus();
+                       return false;
+                   }
+                   
+                   // Validate department selection
+                   if (!specialtySelect.value.trim()) {
+                       event.preventDefault();
+                       alert('Please select a department/specialty');
+                       specialtySelect.focus();
+                       return false;
+                   }
+                   
+                   // Validate time slot selection
+                   if (!timeSlotSelect.value.trim()) {
+                       event.preventDefault();
+                       alert('Please select a time slot');
+                       timeSlotSelect.focus();
+                       return false;
+                   }
+               });
+           } catch (error) {
+               console.error('Error in setupAppointmentForm:', error);
+           }
+       }
+   </script>
+</body>
+</html>

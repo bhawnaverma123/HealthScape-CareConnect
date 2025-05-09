@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Dashboard</title>
+    <!-- Add FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+    <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: Arial, sans-serif;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            padding: 30px;
+            background-color: #16a085;
+            color: white;
+            margin: 0;
+        }
+
+        .navbar {
+            background-color: #16a085;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar a:hover {
+            background-color: #1abc9c;
+        }
+
+        .container {
+            padding: 30px;
+        }
+
+        .stat-card {
+            display: inline-block;
+            width: 23%;
+            background-color: #fff;
+            padding: 20px;
+            margin: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .stat-card h3 {
+            margin: 0;
+            color: #16a085;
+        }
+
+        .stat-card p {
+            font-size: 30px;
+            font-weight: bold;
+            color: #1abc9c;
+        }
+
+        .btn-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .dashboard-btn {
+            display: inline-block;
+            width: 200px;
+            padding: 15px;
+            margin: 15px;
+            background-color: #16a085;
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .dashboard-btn:hover {
+            background-color: #1abc9c;
+        }
+
+        .chart-container {
+            margin-top: 40px;
+        }
+
+        canvas {
+            background-color: white;
+            border-radius: 10px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <span>Patient Dashboard</span>
+        <div>
+            <a href="#">Profile</a>
+            <a href="#">Appointments</a><!-- Logout link in both Admin and Patient Dashboards -->
+            <a href="/login">Logout</a>
+
+        </div>
+    </div>
+
+    <!-- Header -->
+    <h1>Patient Dashboard, Welcome - <%= username %></h1>
+
+    <!-- Notification for new booking with improved styling -->
+    <div id="newBookingNotification" style="display: none; margin: 20px auto; max-width: 800px; background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 20px; border-radius: 8px; text-align: center; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        <div style="margin-bottom: 15px;">
+            <i class="fas fa-check-circle" style="font-size: 40px; color: #16a085; margin-bottom: 10px; display: block;"></i>
+            <h3 style="color: #16a085; margin-bottom: 10px; font-size: 22px;">Booking Confirmed!</h3>
+        </div>
+        <span id="notificationText" style="font-size: 16px; display: block; line-height: 1.5; margin-bottom: 15px;">Your appointment has been successfully booked!</span>
+        <div style="font-size: 14px; color: #666; padding: 10px; background-color: rgba(255,255,255,0.5); border-radius: 5px; display: inline-block;">
+            <i class="fas fa-info-circle"></i> Your appointment details are displayed in the list below
+            <div style="margin-top: 5px;">
+                <a href="#appointments-section" class="dashboard-btn" style="display: inline-block; padding: 8px 15px; font-size: 14px; margin: 0;">View My Appointment</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Buttons for Patient Tasks -->
+    <div class="btn-container">
+        <a href="#appointments-section" class="dashboard-btn">View Appointments</a>
+        <a href="/book" class="dashboard-btn">Book New Appointment</a>
+    </div>
+
+    <!-- Appointments Section -->
+    <div class="container" id="appointments-section">
+        <h2 style="text-align: center;">Your Appointments</h2>
+        
+        <% if (typeof appointments !== 'undefined' && appointments && appointments.length > 0) { %>
+            <table style="width: 100%; margin-top: 20px; border-collapse: collapse; background-color: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-radius: 8px;">
+                <thead>
+                    <tr>
+                        <th style="padding: 15px; text-align: left; border-bottom: 1px solid #ddd; color: #16a085;">Doctor</th>
+                        <th style="padding: 15px; text-align: left; border-bottom: 1px solid #ddd; color: #16a085;">Department</th>
+                        <th style="padding: 15px; text-align: left; border-bottom: 1px solid #ddd; color: #16a085;">Date</th>
+                        <th style="padding: 15px; text-align: left; border-bottom: 1px solid #ddd; color: #16a085;">Time Slot</th>
+                        <th style="padding: 15px; text-align: left; border-bottom: 1px solid #ddd; color: #16a085;">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% appointments.forEach(appointment => { %>
+                        
+                        <tr class="appointment-row" data-id="<%= appointment._id %>" 
+                            style="transition: background-color 0.3s ease;">
+                            <td style="padding: 15px; text-align: left; border-bottom: 1px solid #f0f0f0;">
+                                <!-- Display doctor info with enhanced details -->
+                                <% if (appointment.doctorImage) { %>
+                                    <div class="doctor-image-container" style="width: 40px; height: 40px; overflow: hidden; border-radius: 50%; display: inline-block; vertical-align: middle; margin-right: 8px; border: 2px solid #16a085;">
+                                        <img src="image/<%= appointment.doctorImage %>" alt="<%= appointment.doctorName %>" style="width: 100%; height: 100%; object-fit: cover;">
+                                    </div>
+                                <% } %>
+                                <%= appointment.doctorName ? appointment.doctorName : 'Not specified' %>
+                                <% if (appointment.doctorExperience) { %>
+                                    <span style="display: block; font-size: 12px; color: #666; margin-top: 3px;">
+                                        <%= appointment.doctorExperience %> Years Experience
+                                    </span>
+                                <% } %>
+                            </td>
+                            <td style="padding: 15px; text-align: left; border-bottom: 1px solid #f0f0f0;"><%= appointment.doctorSpecialty || appointment.department || 'Not specified' %></td>
+                            <td style="padding: 15px; text-align: left; border-bottom: 1px solid #f0f0f0;"><%= appointment.date ? new Date(appointment.date).toLocaleDateString() : 'Not specified' %></td>
+                            <td style="padding: 15px; text-align: left; border-bottom: 1px solid #f0f0f0;">
+                                <% if (appointment.timeSlot) { %>
+                                    <%= appointment.timeSlot %>
+                                <% } else if (appointment.slot) { %>
+                                    <% 
+                                    let slotDisplay = appointment.slot;
+                                    switch(appointment.slot) {
+                                        case 'slot1': slotDisplay = "9:00 AM - 10:00 AM"; break;
+                                        case 'slot2': slotDisplay = "10:00 AM - 11:00 AM"; break;
+                                        case 'slot3': slotDisplay = "11:00 AM - 12:00 PM"; break;
+                                        case 'slot4': slotDisplay = "1:00 PM - 2:00 PM"; break;
+                                        case 'slot5': slotDisplay = "3:00 PM - 4:00 PM"; break;
+                                    }
+                                    %>
+                                    <%= slotDisplay %>
+                                <% } else { %>
+                                    Not specified
+                                <% } %>
+                            </td>
+                            <td style="padding: 15px; text-align: left; border-bottom: 1px solid #f0f0f0; color: <%= appointment.status === 'Confirmed' ? '#16a085' : (appointment.status === 'Cancelled' ? '#e74c3c' : '#f39c12') %>;">
+                                <% if (appointment.status === 'Cancelled' && appointment.cancellationDate) { %>
+                                    <div class="status-with-details" style="position: relative; cursor: pointer;">
+                                        <%= appointment.status %>
+                                        <div class="cancellation-details" style="display: none; position: absolute; background: white; border: 1px solid #ddd; padding: 10px; border-radius: 5px; z-index: 10; width: 250px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); left: 0; top: 100%;">
+                                            <p><strong>Cancelled on:</strong> <%= new Date(appointment.cancellationDate).toLocaleString() %></p>
+                                            <% if (appointment.cancellationReason) { %>
+                                                <p><strong>Reason:</strong> <%= appointment.cancellationReason %></p>
+                                            <% } %>
+                                        </div>
+                                    </div>
+                                <% } else { %>
+                                    <%= appointment.status || 'Scheduled' %>
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+            
+            <!-- Add JavaScript for appointment actions -->
+            <script>
+                function cancelAppointment(appointmentId) {
+                    if (confirm('Are you sure you want to cancel this appointment?')) {
+                        // Send request to cancel appointment
+                        fetch(`/cancel-appointment/${appointmentId}`, {
+                            method: 'POST'
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Appointment cancelled successfully');
+                                // Reload the page to reflect changes
+                                window.location.reload();
+                            } else {
+                                alert('Error cancelling appointment: ' + data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('An error occurred while cancelling the appointment');
+                        });
+                    }
+                }
+            </script>
+        <% } else { %>
+            <div style="text-align: center; padding: 30px; background-color: white; border-radius: 8px; margin-top: 20px; color: #666;">
+                <i class="fas fa-calendar-times" style="font-size: 48px; color: #999; margin-bottom: 15px;"></i>
+                <p>You don't have any appointments yet.</p>
+                <a href="/book" class="dashboard-btn" style="display: inline-block; margin-top: 15px;">Book an Appointment</a>
+            </div>
+        <% } %>
+    </div>
+
+    <!-- Script for appointment handling -->
+    <script>
+        // Enhanced handling for new appointment booking notification
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Dashboard initialized - checking for booking notifications");
+            
+            // Helper function to get cookies
+            const getCookie = (name) => {
+                const value = `; ${document.cookie}`;
+                const parts = value.split(`; ${name}=`);
+                if (parts.length === 2) return decodeURIComponent(parts.pop().split(';').shift());
+                return null;
+            };
+            
+            // Get data from both cookies and sessionStorage
+            const isNewBooking = getCookie('newBooking') === 'true' || sessionStorage.getItem('newBooking') === 'true';
+            const doctorName = getCookie('bookedDoctor') || sessionStorage.getItem('doctorName');
+            const department = getCookie('bookedDepartment') || (sessionStorage.getItem('appointment') ? 
+                JSON.parse(sessionStorage.getItem('appointment')).department : '');
+            const timeSlot = getCookie('bookedSlot') || (sessionStorage.getItem('appointment') ? 
+                (JSON.parse(sessionStorage.getItem('appointment')).timeSlot || '') : '');
+            const bookedDate = getCookie('bookedDate') || (sessionStorage.getItem('appointment') ? 
+                JSON.parse(sessionStorage.getItem('appointment')).date : '');
+            
+            console.log("Booking data from cookies/sessionStorage:", {
+                isNewBooking, 
+                doctorName, 
+                department, 
+                timeSlot, 
+                bookedDate
+            });
+            
+            if (isNewBooking && doctorName) {
+                // Display success notification with booking details
+                const notificationDiv = document.getElementById('newBookingNotification');
+                const notificationText = document.getElementById('notificationText');
+                
+                if (notificationDiv && notificationText) {
+                    // Format the date if available
+                    let formattedDate = '';
+                    if (bookedDate) {
+                        try {
+                            const dateObj = new Date(bookedDate);
+                            if (!isNaN(dateObj.getTime())) {
+                                formattedDate = dateObj.toLocaleDateString('en-US', {
+                                    weekday: 'long',
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric'
+                                });
+                            }
+                        } catch (e) {
+                            console.error("Date formatting error:", e);
+                        }
+                    }
+                    
+                    // Create personalized message with appointment details
+                    notificationText.innerHTML = `Your appointment with <strong>${doctorName}</strong> 
+                        in the <strong>${department}</strong> department at 
+                        <strong>${timeSlot}</strong>${formattedDate ? ' on <strong>' + formattedDate + '</strong>' : ''} 
+                        has been successfully booked!`;
+                    
+                    // Show the notification
+                    notificationDiv.style.display = 'block';
+                    
+                    // Find the latest appointment row and highlight it
+                    setTimeout(() => {
+                        const appointmentRows = document.querySelectorAll('.appointment-row');
+                        console.log(`Found ${appointmentRows.length} appointment rows to highlight`);
+                        
+                        if (appointmentRows.length > 0) {
+                            // Assume the latest appointment is the first one (most recent at top)
+                            const latestAppointment = appointmentRows[0];
+                            
+                            // Add highlight animation
+                            latestAppointment.style.backgroundColor = '#d4edda';
+                            latestAppointment.style.animation = 'pulse 2s infinite';
+                            latestAppointment.style.boxShadow = '0 0 10px rgba(22, 160, 133, 0.5)';
+                            
+                            // Add the CSS for the pulse animation if it doesn't exist
+                            if (!document.getElementById('pulse-animation')) {
+                                const style = document.createElement('style');
+                                style.id = 'pulse-animation';
+                                style.textContent = `
+                                    @keyframes pulse {
+                                        0% { background-color: #d4edda; }
+                                        50% { background-color: #f8f9fa; }
+                                        100% { background-color: #d4edda; }
+                                    }
+                                `;
+                                document.head.appendChild(style);
+                            }
+                            
+                            // Scroll to the appointments section
+                            latestAppointment.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        } else {
+                            console.warn("No appointment rows found to highlight - might need to refresh");
+                            // If no appointments are shown but we have booking data, reload the page
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 1500);
+                        }
+                    }, 500);
+                    
+                    // Clear the cookies and sessionStorage after showing the notification
+                    document.cookie = 'newBooking=; Max-Age=0; path=/;';
+                    document.cookie = 'bookedDoctor=; Max-Age=0; path=/;';
+                    document.cookie = 'bookedDepartment=; Max-Age=0; path=/;';
+                    document.cookie = 'bookedSlot=; Max-Age=0; path=/;';
+                    document.cookie = 'bookedDate=; Max-Age=0; path=/;';
+                    
+                    // Also clear sessionStorage
+                    sessionStorage.removeItem('newBooking');
+                    sessionStorage.removeItem('doctorName');
+                    sessionStorage.removeItem('appointment');
+                    sessionStorage.removeItem('doctorImage');
+                }
+            }
+            
+            // Handle cancel appointment functionality
+            document.querySelectorAll('[onclick^="cancelAppointment"]').forEach(button => {
+                const appointmentId = button.getAttribute('onclick').match(/cancelAppointment\('([^']+)'\)/)[1];
+                
+                // Replace the inline onclick with a proper event listener
+                button.removeAttribute('onclick');
+                button.addEventListener('click', function() {
+                    cancelAppointment(appointmentId);
+                });
+            });
+            
+            // Function to handle appointment cancellation
+            window.cancelAppointment = function(appointmentId) {
+                if (confirm('Are you sure you want to cancel this appointment?')) {
+                    // Send request to cancel appointment
+                    fetch(`/cancel-appointment/${appointmentId}`, {
+                        method: 'POST'
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            alert('Appointment cancelled successfully');
+                            // Reload the page to reflect changes
+                            window.location.reload();
+                        } else {
+                            alert('Error cancelling appointment: ' + (data.message || 'Unknown error'));
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('An error occurred while cancelling the appointment. Please try again.');
+                    });
+                }
+            };
+            
+            // Add smooth scrolling for appointment navigation
+            document.querySelectorAll('a[href="#appointments-section"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>

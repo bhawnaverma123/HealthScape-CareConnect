@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> | Hospital Website</title> 
+    <!-- Page Icon -->
+    <link rel="shortcut icon" href="image/heartbeat-solid.svg" type="image/x-icon">   
+    <!-- font-awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+    <!-- Custom Css File Link -->
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <!-- Header Section Starts -->
+    <%- include('partials/header') %>
+    <!-- Header Section End -->
+
+    <!-- Review section Starts  -->
+    <section class="review" id="review">
+        <h1 class="heading">client's <span>review</span></h1>
+        <div class="box-container">
+            <div class="box">
+                <img src="./image/pic-1.png" alt="">
+                <h3>Viraj Chauhan</h3>
+                <div class="stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+                <p class="text">"Excellent Resource for Patients"
+                    The hospital website offers easy navigation and essential information. Booking appointments, checking services, and contacting support are all seamless. The interface is user-friendly, and the staff profiles provide valuable insights. It's a reliable platform for patients seeking quick information and convenient access to healthcare services.
+                    </p>
+            </div>
+            <div class="box">
+                <img src="./image/pic-2.png" alt="">
+                <h3>Rashmi Thakur</h3>
+                <div class="stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+                <p class="text">"Comprehensive and Efficient"
+                    I love the design and functionality of the hospital website. It provides detailed information on services, doctors, and patient care. The online appointment system is straightforward and saves time. I appreciate the FAQs section and health tips, which are helpful. A truly efficient and user-friendly platform.</p>
+            </div>
+            <div class="box">
+                <img src="./image/pic-3.png" alt="">
+                <h3>Aditya Verma</h3>
+                <div class="stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+                <p class="text">"Convenient and Well-Organized"
+                    This hospital’s website is a well-organized hub for all healthcare needs. From scheduling appointments to reading health articles, it’s all accessible in just a few clicks. The information is current, and customer support is responsive. I always feel informed and well taken care of when using the website.
+                    </p>
+            </div>
+        </div>
+    </section>
+     <!-- Review section End  -->
+   
+    <!-- Blogs section Starts -->
+    <section class="blogs" id="blogs">
+        <h1 class="heading">our <span>blogs</span></h1>
+        <div class="box-container">
+            <!-- Blog 1 -->
+            <div class="box">
+                <div class="image">
+                    <img src="./image/blog-1.jpg" alt="">
+                </div>
+                <div class="content">
+                    <div class="icon">
+                        <a href="#"><i class="fas fa-calendar"></i>1st march, 2025</a>
+                        <a href="#"><i class="fas fa-user"></i> Dr. Taniya Narendra</a>
+                    </div>
+                    <h3>"The Importance of Regular Health Checkups"</h3>
+                    <p class="short-content">
+                        Regular health checkups are crucial for early detection of potential health issues. Preventative care can save lives, reduce healthcare costs, and improve long-term well-being.
+                    </p>
+                    <!-- Hidden full content -->
+                    <p class="full-content" style="display: none;">
+                        Regular health checkups are a vital part of maintaining good health. By visiting your doctor for regular screenings, you can detect potential health problems before they become serious. These checkups can help in early disease detection, which increases the chances of successful treatment. In addition, a regular checkup can help improve your quality of life by allowing you to focus on your health proactively. It's a cost-effective way to maintain long-term well-being.
+                    </p>
+                    <a href="#" class="btn learn-more-btn">Learn more <span class="fas fa-chevron-right"></span></a>
+                </div>
+            </div>
+
+            <!-- Blog 2 -->
+            <div class="box">
+                <div class="image">
+                    <img src="./image/blog-2.jpg" alt="">
+                </div>
+                <div class="content">
+                    <div class="icon">
+                        <a href="#"><i class="fas fa-calendar"></i> 1st march, 2025</a>
+                        <a href="#"><i class="fas fa-user"></i> Dr. Divya Vora</a>
+                    </div>
+                    <h3>"How to Manage Stress for Better Health"</h3>
+                    <p class="short-content">
+                        Managing stress through mindfulness, exercise, and balanced lifestyle choices can significantly improve overall health. Learn simple techniques to reduce stress and boost mental well-being.
+                    </p>
+                    <!-- Hidden full content -->
+                    <p class="full-content" style="display: none;">
+                        Stress is one of the most common health issues people face today. Chronic stress can lead to various health problems, including anxiety, depression, heart disease, and more. Fortunately, there are ways to manage and reduce stress. Mindfulness, exercise, and healthy lifestyle choices can significantly improve mental and physical well-being. Taking time for relaxation, practicing deep breathing, and focusing on positive thinking can help reduce the negative effects of stress.
+                    </p>
+                    <a href="#" class="btn learn-more-btn">Learn more <span class="fas fa-chevron-right"></span></a>
+                </div>
+            </div>
+
+            <!-- Blog 3 -->
+            <div class="box">
+                <div class="image">
+                    <img src="./image/blog-3.jpg" alt="">
+                </div>
+                <div class="content">
+                    <div class="icon">
+                        <a href="#"><i class="fas fa-calendar"></i> 1st march, 2025</a>
+                        <a href="#"><i class="fas fa-user"></i> Satwinder Singh</a>
+                    </div>
+                    <h3>"Why Choosing the Right Doctor Matters"</h3>
+                    <p class="short-content">
+                        Selecting the right doctor is vital for your health. Consider experience, communication style, and specialties to ensure personalized care and build a strong doctor-patient relationship.
+                    </p>
+                    <!-- Hidden full content -->
+                    <p class="full-content" style="display: none;">
+                        Choosing the right doctor is crucial to ensuring the best care for your health. You should look for a doctor with expertise in the area you need, but also one you feel comfortable with. A strong doctor-patient relationship leads to better communication, personalized care, and a higher level of trust. You should also consider factors like office location, hours, and reviews from other patients when making your decision.
+                    </p>
+                    <a href="#" class="btn learn-more-btn">Learn more <span class="fas fa-chevron-right"></span></a>
+                </div>
+            </div>
+            <!-- Blog 4 -->
+            <div class="box">
+                <div class="image">
+                    <img src="./image/blog-4.jpg" alt="">
+                </div>
+                <div class="content">
+                    <div class="icon">
+                        <a href="#"><i class="fas fa-calendar"></i> 10th March, 2025</a>
+                        <a href="#"><i class="fas fa-user"></i> Dr. Rajeev Kumar</a>
+                    </div>
+                    <h3>"Uterus Cancer"</h3>
+                    <p class="short-content">
+                        What is uterus cancer?<br>
+                        We refer to cancer in the uterus as uterine cancer. Endometrial cancer occurs in the uterine endometrium.
+                    </p>
+                    <!-- Hidden full content -->
+                    <p class="full-content" style="display: none;">
+                        What is uterus cancer?<br>
+                        We refer to cancer in the uterus as uterine cancer. Endometrial cancer occurs in the uterine endometrium. Gynaecological cancers—reproductive system cancers—are prevalent.Myometrial sarcoma occurs in the uterine muscle wall. Uterine sarcomas are uncommon.
+                    </p>
+                    <a href="#" class="btn learn-more-btn">Learn more <span class="fas fa-chevron-right"></span></a>
+                </div>
+            </div>
+
+            <!-- Blog 5 -->
+            <div class="box">
+                <div class="image">
+                    <img src="./image/blog-5.jpg" alt="">
+                </div>
+                <div class="content">
+                    <div class="icon">
+                        <a href="#"><i class="fas fa-calendar"></i> 20th March, 2025</a>
+                        <a href="#"><i class="fas fa-user"></i> Dr. Natasha Singh</a>
+                    </div>
+                    <h3>"Gut Health and SIBO"</h3>
+                    <p class="short-content">
+                        What is Small Intestinal Bacterial Overgrowth (SIBO)?<br>
+                        Small Intestinal Bacterial Overgrowth (SIBO) is the overgrowth of bacteria in the small intestine.
+                    </p>
+                    <!-- Hidden full content -->
+                    <p class="full-content" style="display: none;">
+                        What is Small Intestinal Bacterial Overgrowth (SIBO)?<br>
+                        Small Intestinal Bacterial Overgrowth (SIBO) is the overgrowth of bacteria in the small intestine. The gastrointestinal (GI) tract normally contains many different species of bacteria and other microorganisms (collectively known as the gut microbiome). The largest numbers of bacteria are found in the colon (end part of the large intestine) while small amounts are present in the small intestine.
+                    </p>
+                    <a href="#" class="btn learn-more-btn">Learn more <span class="fas fa-chevron-right"></span></a>
+                </div>
+            </div>
+
+            <!-- Blog 6 -->
+            <div class="box">
+                <div class="image">
+                    <img src="./image/blog-6.jpg" alt="">
+                </div>
+                <div class="content">
+                    <div class="icon">
+                        <a href="#"><i class="fas fa-calendar"></i> 25th March, 2025</a>
+                        <a href="#"><i class="fas fa-user"></i> Dr. Anjali Mehra</a>
+                    </div>
+                    <h3>"Sleep is your Super Power"</h3>
+                    <p class="short-content">
+                        Love being a late night owl? No wonder why everyone around us has big dark circles around their eyes nowadays. One might also consider why they have poor memory, confusion and an impaired capacity to take firm decisions on their own.
+                    </p>
+                    <!-- Hidden full content -->
+                    <p class="full-content" style="display: none;">
+                        Love being a late night owl? No wonder why everyone around us has big dark circles around their eyes nowadays. One might also consider why they have poor memory, confusion and an impaired capacity to take firm decisions on their own.
+                        Sleeping for 7-8 hours is not only important but also essential in today's era of the fast pacing modern world. But what's more important is - to sleep at the right time. Go to bed by as early as 9.30 pm and wake up by 6 am depending on the need of the body. 
+                        Going to bed early truly makes a person healthy, wealthy and wise!
+                    </p>
+                    <a href="#" class="btn learn-more-btn">Learn more <span class="fas fa-chevron-right"></span></a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Blogs section End -->
+
+    <!-- Footer section Starts  -->
+    <%- include('partials/footer') %>
+    <!-- Footer section End  -->
+
+    <!-- custom js file link  -->
+    <script>
+        // Immediately add event handlers when the document loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Select all learn more buttons with the specific class
+            const learnMoreButtons = document.querySelectorAll('.learn-more-btn');
+            
+            // Add click event listener to each button
+            learnMoreButtons.forEach(function(button) {
+                button.addEventListener('click', function(e) {
+                    // Prevent default anchor behavior
+                    e.preventDefault();
+                    
+                    // Get the parent box and content elements
+                    const box = this.closest('.box');
+                    const fullContent = box.querySelector('.full-content');
+                    const shortContent = box.querySelector('.short-content');
+                    
+                    // Toggle content visibility
+                    if (fullContent.style.display === 'none' || fullContent.style.display === '') {
+                        // Show full content
+                        fullContent.style.display = 'block';
+                        shortContent.style.display = 'none';
+                        this.innerHTML = 'Show less <span class="fas fa-chevron-up"></span>';
+                        
+                        // Smooth scroll to the expanded content
+                        fullContent.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    } else {
+                        // Show short content
+                        fullContent.style.display = 'none';
+                        shortContent.style.display = 'block';
+                        this.innerHTML = 'Learn more <span class="fas fa-chevron-right"></span>';
+                        
+                        // Scroll back to the beginning of the box
+                        box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

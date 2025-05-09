@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> | Hospital Website</title>
+    <link rel="shortcut icon" href="image/heartbeat-solid.svg" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+    <link rel="stylesheet" href="./css/style.css">
+    <style>
+        .video-slider {
+            position: relative;
+            width: 100%;
+            height: 60vh;
+            overflow: hidden;
+            display: flex;
+            background-color: black;
+        }
+
+        .video-frame {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 100%;
+            transition: transform 1s ease-in-out;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .video-frame.visible {
+            transform: translateX(0%);
+            left: 0;
+        }
+
+        .video-frame.hidden {
+            transform: translateX(-100%);
+            left: 0;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .services {
+            padding: 2rem 9%;
+            background: #f5f5f5;
+        }
+
+        .heading {
+            text-align: center;
+            padding-bottom: 2rem;
+            text-shadow: var(--text-shadow);
+            text-transform: uppercase;
+            color: var(--black);
+            font-size: 5rem;
+            letter-spacing: .4rem;
+        }
+
+        .heading span {
+            text-transform: uppercase;
+            color: var(--green);
+        }
+
+        .slider-container {
+            position: relative;
+            overflow: hidden;
+            padding: 2rem 0;
+        }
+
+        .slider-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        .slider-row {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .slide-card {
+            flex: 0 0 auto;
+            width: calc(25% - 2rem);
+            background: #fff;
+            padding: 2.5rem;
+            border-radius: .5rem;
+            box-shadow: var(--box-shadow);
+            border: var(--border);
+            text-align: center;
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .slide-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .slide-card i {
+            color: var(--green);
+            font-size: 5rem;
+            padding-bottom: .5rem;
+        }
+
+        .slide-card h3 {
+            color: var(--black);
+            font-size: 2.5rem;
+            padding: 1rem 0;
+        }
+
+        .slide-card p {
+            color: var(--light-color);
+            font-size: 1.4rem;
+            line-height: 2;
+            margin-bottom: 1.5rem;
+        }
+
+        .slide-card .learn-btn {
+            display: inline-block;
+            margin-top: 1rem;
+            padding: .5rem;
+            padding-left: 1rem;
+            border: var(--border);
+            border-radius: .5rem;
+            box-shadow: var(--box-shadow);
+            color: var(--green);
+            cursor: pointer;
+            font-size: 1.7rem;
+            background: #fff;
+        }
+
+        .slide-card .learn-btn span {
+            padding: .7rem 1rem;
+            border-radius: .5rem;
+            background: var(--green);
+            color: #fff;
+            margin-left: .5rem;
+        }
+
+        .slide-card .learn-btn:hover {
+            background: var(--green);
+            color: #fff;
+        }
+
+        .slide-card .learn-btn:hover span {
+            color: var(--green);
+            background: #fff;
+            margin-left: 1rem;
+        }
+
+        .slider-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 2.5rem;
+            color: var(--green);
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+            z-index: 10;
+        }
+
+        .slider-control:hover {
+            opacity: 1;
+        }
+
+        .prev-btn {
+            left: -1rem;
+        }
+
+        .next-btn {
+            right: -1rem;
+        }
+
+        .slider-container:not(.can-slide) .slider-control {
+            display: none;
+        }
+
+        @media (max-width: 991px) {
+            .slide-card {
+                width: calc(33.33% - 2rem);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .slide-card {
+                width: calc(50% - 2rem);
+            }
+        }
+
+        @media (max-width: 450px) {
+            .slide-card {
+                width: 100%;
+            }
+        }
+
+        /* FAQ Section Modifications */
+        .faq {
+            background-color: #f4f7fa;
+            padding: 2rem 9%;
+        }
+
+        .faq-title {
+            text-align: center;
+            font-size: 4rem;
+            font-weight: bold;
+            color: var(--green);
+            margin-bottom: 4rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-shadow: var(--text-shadow);
+        }
+
+        .faq-item {
+            margin-bottom: 2rem;
+            background-color: #fff;
+            border-radius: .5rem;
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            border: var(--border);
+        }
+
+        .faq-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 2.5rem;
+            cursor: pointer;
+            background-color: #fff;
+            color: var(--black);
+            font-size: 2rem;
+            font-weight: 600;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background-color: #f9f9f9;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            padding: 0 2.5rem;
+            background-color: #fff;
+            font-size: 1.7rem;
+            color: var(--light-color);
+            line-height: 1.8;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+        }
+
+        .faq-answer.open {
+            max-height: 50rem;
+            padding: 1.5rem 2.5rem;
+        }
+
+        .faq-question i {
+            font-size: 1.7rem;
+            color: var(--green);
+            transition: transform 0.3s ease;
+        }
+
+        .faq-question.open i {
+            transform: rotate(90deg);
+        }
+
+        
+        
+    </style>
+</head>
+<body>
+    <%- include('partials/header') %>
+    
+    <main>
+        <section class="video-slider">
+            <div class="video-frame visible" id="video-1">
+                <video autoplay muted loop>
+                    <source src="video/services.mp4" type="video/mp4">
+                </video>
+            </div>
+        </section>
+
+        <section class="services" id="services">
+            <h1 class="heading"><span>our</span> services</h1>
+            <div class="slider-container">
+                <div class="slider-wrapper">
+                    <% 
+                    // Create chunks of 4 services for each row
+                    const serviceChunks = [];
+                    const servicesList = services || [];
+                    
+                    for (let i = 0; i < servicesList.length; i += 4) {
+                        serviceChunks.push(servicesList.slice(i, i + 4));
+                    }
+
+                    if (serviceChunks.length > 0) {
+                        // Render each row
+                        serviceChunks.forEach((chunk, index) => { 
+                    %>
+                        <div class="slider-row" id="slider-row-<%= index + 1 %>">
+                            <button class="slider-control prev-btn" onclick="slideRowLeft('slider-row-<%= index + 1 %>')">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            
+                            <% chunk.forEach(service => { %>
+                                <div class="slide-card">
+                                    <i class="<%= service.icon %>"></i>
+                                    <h3><%= service.title %></h3> <!-- Card heading for the service -->
+                                    <p><%= service.description %></p>
+                                    <a href="<%= service.link %>" class="learn-btn">Learn More</a>
+                                </div>
+                            <% }); %>
+                            
+                            <button class="slider-control next-btn" onclick="slideRowRight('slider-row-<%= index + 1 %>')">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    <% }); %>
+                    <% } else { %>
+                        <div class="no-services-message" style="text-align: center; padding: 30px; font-size: 1.5em; color: #777;">
+                            <i class="fas fa-info-circle" style="font-size: 2em; color: #16a085; margin-bottom: 15px;"></i>
+                            <p>No services available at the moment. Please check back later.</p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </section>
+
+        <section class="faq">
+            <div class="container">
+                <h2 class="faq-title">Frequently Asked Questions</h2>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What makes HealthScape different from other hospitals?</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="faq-answer">
+                        HealthScape stands out by combining cutting-edge medical technology, compassionate care, and a team of highly skilled professionals. We focus on personalized treatment plans and provide a comfortable, patient-centered experience, ensuring the best outcomes for every individual.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How do I book an appointment with a doctor at HealthScape?</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="faq-answer">
+                        You can book an appointment with any of our doctors through our easy-to-use online booking system.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>What services are available at HealthScape?</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="faq-answer">
+                        We offer a comprehensive range of services including emergency care, cardiology, orthopedics, dental care, diagnostic imaging, maternity services, pediatric care, and much more.
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>How can I access my medical records at HealthScape?</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                    <div class="faq-answer">
+                        You can access your medical records through our secure patient portal available on the website.
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Section -->
+    <%- include('partials/footer') %>
+
+    <script src="js/script.js"></script>
+    
+</body>
+</html>

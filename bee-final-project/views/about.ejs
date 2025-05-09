@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> | Hospital Website</title> 
+    <!-- Page Icon -->
+    <link rel="shortcut icon" href="image/heartbeat-solid.svg" type="image/x-icon">   
+    <!-- font-awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+    <!-- Custom Css File Link -->
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <!-- Header Section Starts -->
+    <%- include('partials/header') %>
+
+    <!-- About Section Starts -->
+<section class="about" id="about">
+    <h1 class="heading"><span>about</span> us</h1>
+    <div class="row">
+        <div class="image">
+            <img src="./image/about-img.svg" alt="Hospital Care">
+        </div>
+        <div class="content">
+            <h3>We are committed to your health and well-being</h3>
+            <p>Our hospital is a leading healthcare institution dedicated to providing exceptional medical care and advanced treatment solutions. With state-of-the-art facilities and a team of highly skilled professionals, we strive to ensure the best possible outcomes for our patients.</p>
+            <p>We specialize in a wide range of medical disciplines, including cardiology, orthopedics, neurology, pediatrics, oncology, and more. Our integrated approach combines modern medical technology with compassionate care to address the unique needs of every individual.</p>
+            <p>At the core of our mission is a commitment to preventive healthcare. We emphasize early diagnosis, regular health checkups, and education to promote a healthier lifestyle for our community. Our hospital offers 24/7 emergency services, well-equipped ICUs, and a full spectrum of diagnostic and therapeutic services.</p>
+            <p>In addition to patient care, we are actively engaged in medical research and innovation, ensuring that we remain at the forefront of healthcare advancements. Our dedicated team works tirelessly to deliver a seamless healthcare experience with personalized attention and utmost respect for your well-being.</p>
+            <a href="/about" class="btn">Learn More <span class="fas fa-chevron-right"></span></a>
+        </div>
+    </div>
+</section>
+<!-- About Section End -->
+
+
+       <!-- Footer section Starts  -->
+       <%- include('partials/footer') %>
+    <!-- Footer section End  -->
+
+
+
+
+
+
+
+
+
+
+
+    <!-- custom js file link  -->
+    <script src="js/script.js"></script>
+</body>
+</html>
+
+
+

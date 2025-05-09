@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %> | Hospital Website</title> 
+    <!-- Page Icon -->
+    <link rel="shortcut icon" href="image/heartbeat-solid.svg" type="image/x-icon">   
+    <!-- font-awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"/>
+    <!-- Custom Css File Link -->
+    <link rel="stylesheet" href="./css/style.css">
+    <style>
+        
+        .video-slider {
+            position: relative;
+            width: 100%;
+            height: 60vh;
+            overflow: hidden;
+            display: flex;
+            background-color: black;
+        }
+
+        .video-frame {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 100%;
+            transition: transform 1s ease-in-out;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .video-frame.visible {
+            transform: translateX(0%);
+            left: 0;
+        }
+
+        .video-frame.hidden {
+            transform: translateX(-100%);
+            left: 0;
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* FAQ Section Modifications */
+        .faq {
+            background-color: #f4f7fa;
+            padding: 60px 30px;
+            font-family: Arial, sans-serif; /* Use a cleaner font family */
+        }
+
+        .faq-title {
+            text-align: center;
+            font-size: 2.4em;
+            font-weight: bold;
+            color: #16a085;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .faq-item {
+            margin-bottom: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item:hover {
+            transform: translateY(-5px); /* Slight hover effect */
+        }
+
+        .faq-question {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            color: #34495e;
+            font-size: 1.6em;
+            font-weight: 600;
+            border: none;
+            border-bottom: 1px solid none;
+            transition: background-color 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background-color: #ecf0f1;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            padding: 0 25px; /* No padding initially to keep it hidden */
+            background-color: #f1f1f1;
+            font-size: 1.5em;
+            font-weight: 550;
+            color: #7f8c8d;
+            line-height: 1.6;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+        }
+
+        .faq-answer.open {
+            max-height: 200px;
+            padding: 20px 25px; /* Padding added when answer is open */
+        }
+
+        .faq-question i {
+            font-size: 1.2em;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-question.open i {
+            transform: rotate(90deg); /* Rotate the icon when the answer is open */
+        }
+
+        .service-info {
+            background-color: #f4f7fa;
+            padding: 40px 30px;
+            font-family: Arial, sans-serif;
+        }
+
+        .service-info h2 {
+            font-size: 2.4em;
+            color: #16a085;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .service-info p {
+            font-size: 1.2em;
+            color: #7f8c8d;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .doctors-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            margin-top: 40px;
+        }
+
+        .doctor-card {
+            background-color: white;
+            width: 280px;
+            padding: 20px;
+            margin: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .doctor-card img {
+            width: 100%;
+            border-radius: 8px;
+            height: 250px;
+            object-fit: cover;
+        }
+
+        .doctor-card h3 {
+            font-size: 1.8em;
+            color: #34495e;
+            margin-top: 15px;
+        }
+
+        .doctor-card .specialty {
+            font-size: 1.2em;
+            color: #16a085;
+        }
+
+        .doctor-card .experience {
+            font-size: 1em;
+            color: #7f8c8d;
+            margin: 10px 0;
+        }
+
+        .doctor-card select {
+            width: 100%;
+            padding: 10px;
+            margin: 15px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .book-btn {
+            padding: 10px 20px;
+            background-color: #16a085;
+            color: white;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .book-btn:hover {
+            background-color: #1abc9c;
+        }
+
+        .appointment-msg {
+            color: red;
+            font-size: 1.1em;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .doctor-card .book-btn {
+            display: block;
+        }
+
+        .doctor-card .book-btn.disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <section class="video-slider">
+        <!-- First Video -->
+        <div class="video-frame visible" id="video-1">
+            <video autoplay muted loop>
+                <source src="video/pediatrics.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </section>
+    
+    <!-- Header Section Starts -->
+    <%- include('partials/header') %>
+    <!-- Header Section End -->
+
+    <h1 class="heading" style="text-align: center; font-size: 5em; margin-top: 40px;">
+        <span style="color: #16a085;">Pedia</span>trics
+    </h1>
+    
+    <!-- Doctors Section -->
+    <section class="doctors-section">
+        <% if (doctors && doctors.length > 0) { %>
+            <% doctors.forEach((doctor, index) => { %>
+                <!-- Doctor <%= index + 1 %> -->
+                <div class="doctor-card" id="doctor<%= index + 1 %>">
+                    <img src="image/<%= doctor.image %>" alt="<%= doctor.name %>">
+                    <h3><%= doctor.name %></h3>
+                    <p class="specialty"><%= doctor.specialty %></p>
+                    <p class="experience">Experience: <%= doctor.experience %> Years</p>
+                    <button class="book-btn" id="book-btn<%= index + 1 %>" onclick="bookAppointment('<%= doctor._id %>', 'Pediatrics', '<%= doctor.name %>', '<%= doctor.experience %>', '<%= doctor.image %>')">Book Appointment</button>
+                    <div class="appointment-msg" id="msg<%= index + 1 %>" style="display: none;"></div>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <p class="no-doctors">No pediatrics specialists available at the moment. Please check back later.</p>
+        <% } %>
+    </section>
+
+    <section class="faq">
+        <div class="container">
+            <h2 class="faq-title">Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What makes HealthScape different from other hospitals?</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div class="faq-answer">
+                    HealthScape stands out by combining cutting-edge medical technology, compassionate care, and a team of highly skilled professionals. We focus on personalized treatment plans and provide a comfortable, patient-centered experience, ensuring the best outcomes for every individual.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How do I book an appointment with a doctor at HealthScape?</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div class="faq-answer">
+                    You can book an appointment with any of our doctors through our easy-to-use online booking system.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>What services are available at HealthScape?</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div class="faq-answer">
+                    We offer a comprehensive range of services including emergency care, cardiology, orthopedics, dental care, diagnostic imaging, maternity services, pediatric care, and much more.
+                </div>
+            </div>
+            <div class="faq-item">
+                <div class="faq-question">
+                    <span>How can I access my medical records at HealthScape?</span>
+                    <i class="fas fa-chevron-right"></i>
+                </div>
+                <div class="faq-answer">
+                    You can access your medical records through our secure patient portal available on the website.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer section Starts  -->
+    <%- include('partials/footer') %>
+    <!-- Footer section End  -->
+
+    <!-- custom js file link  -->
+    <script src="js/script.js"></script>
+    <script>
+        // Add event listeners to all book appointment buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            const bookButtons = document.querySelectorAll('.book-btn');
+            bookButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    const doctorId = this.getAttribute('onclick').match(/'([^']+)'/)[1];
+                    const department = this.getAttribute('onclick').match(/'[^']+', *'([^']+)'/)[1];
+                    const doctorName = this.getAttribute('onclick').match(/'[^']+', *'[^']+', *'([^']+)'/)[1];
+                    const experience = this.getAttribute('onclick').match(/'[^']+', *'[^']+', *'[^']+', *'([^']+)'/)[1];
+                    const image = this.getAttribute('onclick').match(/'[^']+', *'[^']+', *'[^']+', *'[^']+', *'([^']+)'/)[1];
+                    
+                    bookAppointment(e, doctorId, department, doctorName, experience, image);
+                });
+            });
+        });
+
+        async function bookAppointment(event, doctorId, department, doctorName, experience, doctorImage) {
+            try {
+                // Check if user is logged in
+                const authResponse = await fetch('/check-auth');
+                const authData = await authResponse.json();
+                
+                if (authData.authenticated) {
+                    // If authenticated, proceed directly to booking page without doctor data
+                    window.location.href = '/book';
+                } else {
+                    // If not authenticated, redirect to login page first
+                    window.location.href = '/login?redirect=book';
+                }
+            } catch (error) {
+                console.error('Error checking authentication:', error);
+                alert('There was an error processing your request. Please try again.');
+            }
+        }
+    </script>
+</body>
+</html>
